@@ -23,6 +23,17 @@ php实现基于确定有穷自动机算法的铭感词过滤
     require './vendor/autoload.php';
     
     use DfaFilter\SensitiveHelper;
+    
+### 获取影响因子
+    // 获取影响因子数组
+    $interferenceData = array(
+        '#',
+        '，',
+        '~',
+        '-',
+        '/',
+        ......
+    );
 
 ### 获取敏感词库
 
@@ -38,18 +49,18 @@ php实现基于确定有穷自动机算法的铭感词过滤
    
 ### 检测是否含有敏感词
 
-    $islegal = SensitiveHelper::init()->setTree($wordData)->islegal($content);
+    $islegal = SensitiveHelper::init()->setInterference($interference)->setTree($wordData)->islegal($content);
 ### 敏感词过滤
     
     // 敏感词替换为***为例
-    $filterContent = SensitiveHelper::init()->setTree($wordData)->replace($content, '***');
+    $filterContent = SensitiveHelper::init()->setInterference($interference)->setTree($wordData)->replace($content, '***');
     
 ### 获取文字中的敏感词
 
     // 获取内容中所有的敏感词
-    $sensitiveWordGroup = SensitiveHelper::init()->setTree($wordData)->getBadWord($content);
+    $sensitiveWordGroup = SensitiveHelper::init()->setInterference($interference)->setTree($wordData)->getBadWord($content);
     // 仅且获取一个敏感词
-    $sensitiveWordGroup = SensitiveHelper::init()->setTree($wordData)->getBadWord($content, 1);
+    $sensitiveWordGroup = SensitiveHelper::init()->setInterference($interference)->setTree($wordData)->getBadWord($content, 1);
 
 目前已知使用平台：[广电云](http://www.guangdianyun.tv/) 节目直播页面在线聊天功能支持
 

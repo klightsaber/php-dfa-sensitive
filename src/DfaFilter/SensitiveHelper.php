@@ -39,6 +39,13 @@ class SensitiveHelper
     protected static $badWordList = null;
 
     /**
+     * 存放影响因子
+     *
+     * @var array
+     */
+    protected $interference = array();
+
+    /**
      * 获取单例
      *
      * @return self
@@ -51,6 +58,17 @@ class SensitiveHelper
         return self::$_instance;
     }
 
+    /**
+     * 设置影响因子
+     *
+     * @param array $interference
+     * @return $this
+     */
+    public function setInterference($interference = array()){
+        $this->interference = $interference;
+
+        return $this;
+    }
 
     /**
      * 构建铭感词树
@@ -112,6 +130,12 @@ class SensitiveHelper
             $tempMap = $this->wordTree;
             for ($i = $length; $i < $this->contentLength; $i++) {
                 $keyChar = mb_substr($content, $i, 1, 'utf-8');
+
+                //如果为影响因子，则跳过
+                if (in_array($keyChar, $this->interference)){
+                    $matchFlag ++;
+                    continue;
+                }
 
                 // 获取指定节点树
                 $nowMap = $tempMap->get($keyChar);
@@ -199,6 +223,12 @@ class SensitiveHelper
             $tempMap = $this->wordTree;
             for ($i = $length; $i < $this->contentLength; $i++) {
                 $keyChar = mb_substr($content, $i, 1, 'utf-8');
+
+                //如果为影响因子，则跳过
+                if (in_array($keyChar, $this->interference)){
+                    $matchFlag ++;
+                    continue;
+                }
 
                 // 获取指定节点树
                 $nowMap = $tempMap->get($keyChar);
